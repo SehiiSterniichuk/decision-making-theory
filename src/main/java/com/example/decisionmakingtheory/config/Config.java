@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "input")
+@ConfigurationProperties(prefix = "my.io")
 public class Config {
     private String pathToCSV;
+    private String pathToResultFolder;
 }

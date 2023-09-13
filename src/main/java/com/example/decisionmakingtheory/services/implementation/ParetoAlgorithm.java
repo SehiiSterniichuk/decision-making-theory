@@ -10,4 +10,9 @@ public class ParetoAlgorithm extends AbstractAlgorithm {
         }
         return true;
     }
+
+    @Override
+    public String getName() {
+        return "Pareto";
+    }
 }

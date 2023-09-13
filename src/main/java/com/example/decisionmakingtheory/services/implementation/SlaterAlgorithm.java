@@ -10,4 +10,9 @@ public class SlaterAlgorithm extends AbstractAlgorithm {
         }
         return true;
     }
+
+    @Override
+    public String getName() {
+        return "Slater";
+    }
 }
