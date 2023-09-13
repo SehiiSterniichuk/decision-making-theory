@@ -3,7 +3,6 @@ package com.example.decisionmakingtheory.services.implementation;
 import com.example.decisionmakingtheory.config.Config;
 import com.example.decisionmakingtheory.domain.AlternativeCriteriaTable;
 import com.example.decisionmakingtheory.services.AlternativeFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +11,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Slf4j
 class CSVFileAlternativeFactoryTest {
 
     private AlternativeFactory factory;
@@ -28,8 +26,8 @@ class CSVFileAlternativeFactoryTest {
     void createTables() {
         List<AlternativeCriteriaTable> tables = factory.createTables();
         assertEquals(tables.size(), 2);
-        int[][] table1 = {{1, 2}, {1, 2}};
-        int[][] table2 = {{3, 4}, {3, 4}};
+        int[][] table1 = {{1, 1}, {2, 2}};
+        int[][] table2 = {{3, 3}, {4, 4}};
         var actual1 = tables.get(0).alternatives();
         var actual2 = tables.get(1).alternatives();
         assertArrayEquals(table1[0], actual1[0]);

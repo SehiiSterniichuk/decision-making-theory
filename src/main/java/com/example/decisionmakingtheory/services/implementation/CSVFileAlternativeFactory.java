@@ -17,24 +17,27 @@ import java.util.List;
 @Slf4j
 public class CSVFileAlternativeFactory implements AlternativeFactory {
     private final Config config;
+
     @Override
     public List<AlternativeCriteriaTable> createTables() {
         List<AlternativeCriteriaTable> list;
-        try (LineNumberReader reader = new LineNumberReader(new FileReader(config.getPathToCSV()))){
+        try (LineNumberReader reader = new LineNumberReader(new FileReader(config.getPathToCSV()))) {
             String line;
             list = new ArrayList<>(3);
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 String[] split = line.split(",");
-                int[] q1 = new int[split.length];
-                int[] q2 = new int[split.length];
+                int[][] data = new int[split.length][2];
                 for (int i = 0; i < split.length; i++) {
                     var value = split[i];
+                    if (value.length() == 1) {
+                        data[i] = new int[]{0, value.charAt(0) - '0'};
+                        continue;
+                    }
                     int a1 = value.charAt(0) - '0';
                     int a2 = value.charAt(1) - '0';
-                    q1[i] = a1;
-                    q2[i] = a2;
+                    data[i] = new int[]{a1, a2};
                 }
-                AlternativeCriteriaTable table = new AlternativeCriteriaTable(new int[][]{q1, q2});
+                AlternativeCriteriaTable table = new AlternativeCriteriaTable(data);
                 list.add(table);
             }
         } catch (Exception e) {
