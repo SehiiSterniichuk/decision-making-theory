@@ -89,7 +89,6 @@ public class JFreeChartPNGScatterPainter implements PNGScatterPainter {
             int seriesId = isSolution ? 0 : 1;
             if (isSolution && !pointMap.containsKey(point)) {
                 solutionPoints.add(point);
-                System.out.println(point);
             }
             dataset.add(seriesId, point);
             var oldLabel = pointMap.get(point);
@@ -113,13 +112,7 @@ public class JFreeChartPNGScatterPainter implements PNGScatterPainter {
         renderer.setSeriesPaint(1, Color.red);
         XYSeries lineSeries = new XYSeries("Line");
         List<Point> points = Point.sortNearestNeighbor(solutionPoints);
-        log.info(points.toString());
-        log.info(points.size() + "");
-        log.info(solutionPoints.size() + "");
-        points.forEach(p -> {
-            log.info("sorted: " + p);
-            lineSeries.add(p.x(), p.y());
-        });
+        points.forEach(p -> lineSeries.add(p.x(), p.y()));
         XYSeriesCollection lineDataset = new XYSeriesCollection(lineSeries);
         // Create the line renderer
         XYLineAndShapeRenderer lineRenderer = new XYLineAndShapeRenderer(true, false);

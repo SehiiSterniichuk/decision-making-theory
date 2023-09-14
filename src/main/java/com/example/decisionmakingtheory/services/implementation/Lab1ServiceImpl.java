@@ -1,6 +1,5 @@
 package com.example.decisionmakingtheory.services.implementation;
 
-import com.example.decisionmakingtheory.config.Config;
 import com.example.decisionmakingtheory.domain.*;
 import com.example.decisionmakingtheory.services.Algorithm;
 import com.example.decisionmakingtheory.services.AlternativeFactory;
@@ -10,20 +9,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class Lab1ServiceImpl implements Lab1Service {
-    private final Config config;
     private final AlternativeFactory factory;
     private final ResultProcessor resultProcessor;
     private final Algorithm pareto = new ParetoAlgorithm();
@@ -31,7 +25,6 @@ public class Lab1ServiceImpl implements Lab1Service {
 
     @Override
     public List<LabResult> results() {
-        deleteOldOutput();
         List<AlternativeCriteriaTable> createTables = factory.createTables();
         int size = createTables.size();
         List<LabResult> results = new ArrayList<>(size + 1);
@@ -87,30 +80,7 @@ public class Lab1ServiceImpl implements Lab1Service {
         return new AlternativeCriteriaTable(all);
     }
 
-    private void deleteOldOutput() {
-        var pathToResultFolder = Path.of(config.getPathToResultFolder());
-        try {
-            deleteDirectory(pathToResultFolder);
-            Files.createDirectory(Path.of(config.getPathToResultFolder()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    private static void deleteDirectory(Path directory) throws IOException {
-        if (Files.exists(directory)) {
-            try (Stream<Path> walk = Files.walk(directory)) {
-                walk.sorted((a, b) -> -a.compareTo(b)) // Reverse order for files
-                        .forEach(file -> {
-                            try {
-                                Files.delete(file);
-                            } catch (IOException e) {
-                                log.error(e.getMessage());
-                            }
-                        });
-            }
-        } else {
-            log.info("Directory does not exist: " + directory);
-        }
-    }
+
+
 }
