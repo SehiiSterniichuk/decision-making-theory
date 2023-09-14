@@ -1,8 +1,9 @@
 package com.example.decisionmakingtheory.services.implementation;
 
-import com.example.decisionmakingtheory.config.Config;
-import com.example.decisionmakingtheory.domain.AlternativeCriteriaTable;
-import com.example.decisionmakingtheory.services.AlternativeFactory;
+import com.example.decisionmakingtheory.lab1.config.Config;
+import com.example.decisionmakingtheory.lab1.domain.AlternativeCriteriaTable;
+import com.example.decisionmakingtheory.lab1.services.AlternativeFactory;
+import com.example.decisionmakingtheory.lab1.services.implementation.CSVFileAlternativeFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

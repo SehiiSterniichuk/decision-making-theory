@@ -1,7 +1,7 @@
-package com.example.decisionmakingtheory.services.implementation;
+package com.example.decisionmakingtheory.lab1.services.implementation;
 
-import com.example.decisionmakingtheory.config.Config;
-import com.example.decisionmakingtheory.services.ResultService;
+import com.example.decisionmakingtheory.lab1.config.Config;
+import com.example.decisionmakingtheory.lab1.services.ResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;

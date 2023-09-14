@@ -1,7 +1,7 @@
-package com.example.decisionmakingtheory.controller;
+package com.example.decisionmakingtheory.lab1.controller;
 
-import com.example.decisionmakingtheory.domain.LabResult;
-import com.example.decisionmakingtheory.services.Lab1Service;
+import com.example.decisionmakingtheory.lab1.domain.LabResult;
+import com.example.decisionmakingtheory.lab1.services.Lab1Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

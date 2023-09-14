@@ -1,8 +1,8 @@
-package com.example.decisionmakingtheory.services.implementation;
+package com.example.decisionmakingtheory.lab1.services.implementation;
 
-import com.example.decisionmakingtheory.config.Config;
-import com.example.decisionmakingtheory.domain.AlternativeCriteriaTable;
-import com.example.decisionmakingtheory.services.AlternativeFactory;
+import com.example.decisionmakingtheory.lab1.config.Config;
+import com.example.decisionmakingtheory.lab1.domain.AlternativeCriteriaTable;
+import com.example.decisionmakingtheory.lab1.services.AlternativeFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

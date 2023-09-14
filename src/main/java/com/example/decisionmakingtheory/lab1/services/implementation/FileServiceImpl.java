@@ -1,7 +1,7 @@
-package com.example.decisionmakingtheory.services.implementation;
+package com.example.decisionmakingtheory.lab1.services.implementation;
 
 
-import com.example.decisionmakingtheory.config.Config;
+import com.example.decisionmakingtheory.lab1.config.Config;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;

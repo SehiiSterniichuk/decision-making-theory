@@ -1,6 +1,6 @@
-package com.example.decisionmakingtheory.controller;
+package com.example.decisionmakingtheory.lab1.controller;
 
-import com.example.decisionmakingtheory.services.ResultService;
+import com.example.decisionmakingtheory.lab1.services.ResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

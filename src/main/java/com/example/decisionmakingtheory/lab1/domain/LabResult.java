@@ -1,4 +1,4 @@
-package com.example.decisionmakingtheory.domain;
+package com.example.decisionmakingtheory.lab1.domain;
 
 import lombok.Builder;
 

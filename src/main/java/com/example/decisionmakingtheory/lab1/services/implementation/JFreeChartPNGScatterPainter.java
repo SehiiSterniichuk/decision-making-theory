@@ -1,9 +1,9 @@
-package com.example.decisionmakingtheory.services.implementation;
+package com.example.decisionmakingtheory.lab1.services.implementation;
 
-import com.example.decisionmakingtheory.domain.AlternativeCriteriaTable;
-import com.example.decisionmakingtheory.domain.Domination;
-import com.example.decisionmakingtheory.domain.PlotData;
-import com.example.decisionmakingtheory.services.PNGScatterPainter;
+import com.example.decisionmakingtheory.lab1.domain.AlternativeCriteriaTable;
+import com.example.decisionmakingtheory.lab1.domain.Domination;
+import com.example.decisionmakingtheory.lab1.domain.PlotData;
+import com.example.decisionmakingtheory.lab1.services.PNGScatterPainter;
 import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;

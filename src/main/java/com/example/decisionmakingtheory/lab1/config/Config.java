@@ -1,4 +1,4 @@
-package com.example.decisionmakingtheory.config;
+package com.example.decisionmakingtheory.lab1.config;
 
 import lombok.Getter;
 import lombok.Setter;

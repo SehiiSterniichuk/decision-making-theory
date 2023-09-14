@@ -28,15 +28,14 @@
                     th:text="${vector[1]}"></td>
             </tr>
             <tr th:each="method : ${res.methods()}">
-                <td th:value="${method.methodName()}"></td>
+                <td th:text="${method.methodName()}"></td>
                 <td th:each="dom : ${method.domination().a()}"
                     th:text="${dom}"></td>
             </tr>
-<!--            <tr th:each="dom : ${res.methods().get(1).domination()}">-->
-<!--                <td th:value="${res.methods().get(1).methodName()}"></td>-->
-<!--                <td th:value="${dom}"></td>-->
-<!--            </tr>-->
         </table>
+        <div th:each="method : ${res.methods()}">
+            <p th:text="${method.methodName()} + ' set of solutions: ' + ${method.domination().collectResult()}"></p>
+        </div>
         <div  class="images">
             <img th:each="method : ${res.methods()}" class="scatter-plot" th:src="'http://localhost:8080/api/v1/lab1/results/download/scatter/' + ${method.fileName()}" th:alt="${method.methodName()}">
         </div>

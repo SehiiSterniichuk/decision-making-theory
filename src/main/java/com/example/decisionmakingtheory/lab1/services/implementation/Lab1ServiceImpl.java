@@ -1,10 +1,10 @@
-package com.example.decisionmakingtheory.services.implementation;
+package com.example.decisionmakingtheory.lab1.services.implementation;
 
-import com.example.decisionmakingtheory.domain.*;
-import com.example.decisionmakingtheory.services.Algorithm;
-import com.example.decisionmakingtheory.services.AlternativeFactory;
-import com.example.decisionmakingtheory.services.Lab1Service;
-import com.example.decisionmakingtheory.services.ResultProcessor;
+import com.example.decisionmakingtheory.lab1.domain.*;
+import com.example.decisionmakingtheory.lab1.services.Lab1Service;
+import com.example.decisionmakingtheory.lab1.services.Algorithm;
+import com.example.decisionmakingtheory.lab1.services.AlternativeFactory;
+import com.example.decisionmakingtheory.lab1.services.ResultProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

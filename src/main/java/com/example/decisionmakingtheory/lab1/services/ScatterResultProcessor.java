@@ -1,9 +1,9 @@
-package com.example.decisionmakingtheory.services;
+package com.example.decisionmakingtheory.lab1.services;
 
-import com.example.decisionmakingtheory.config.Config;
-import com.example.decisionmakingtheory.domain.AlternativeCriteriaTable;
-import com.example.decisionmakingtheory.domain.Domination;
-import com.example.decisionmakingtheory.domain.PlotData;
+import com.example.decisionmakingtheory.lab1.config.Config;
+import com.example.decisionmakingtheory.lab1.domain.AlternativeCriteriaTable;
+import com.example.decisionmakingtheory.lab1.domain.Domination;
+import com.example.decisionmakingtheory.lab1.domain.PlotData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
