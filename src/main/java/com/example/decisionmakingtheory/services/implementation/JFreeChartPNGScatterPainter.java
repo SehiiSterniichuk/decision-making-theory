@@ -40,22 +40,15 @@ public class JFreeChartPNGScatterPainter implements PNGScatterPainter {
             if (n <= 1) {
                 return points;
             }
-
-            // Initialize a list to store the sorted points
             List<Point> sortedPoints = new ArrayList<>(n);
-            // Create an array to keep track of visited points
             boolean[] visited = new boolean[n];
-            // Start with the first point and mark it as visited
             Point start = points.get(0);
             sortedPoints.add(start);
             visited[0] = true;
-
             while (sortedPoints.size() < n) {
                 Point currentPoint = sortedPoints.get(sortedPoints.size() - 1);
                 int nextPointIndex = -1;
                 double minDistance = Double.MAX_VALUE;
-
-                // Find the nearest unvisited neighbor
                 for (int j = 0; j < n; j++) {
                     if (!visited[j]) {
                         double distance = currentPoint.distanceTo(points.get(j));
@@ -65,14 +58,11 @@ public class JFreeChartPNGScatterPainter implements PNGScatterPainter {
                         }
                     }
                 }
-
-                // Mark the nearest neighbor as visited and add it to the sorted list
                 if (nextPointIndex != -1) {
                     visited[nextPointIndex] = true;
                     sortedPoints.add(points.get(nextPointIndex));
                 }
             }
-
             return sortedPoints;
         }
     }

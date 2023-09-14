@@ -9,6 +9,10 @@ public record AlternativeCriteriaTable(int[][] alternatives) {
                 '}';
     }
 
+    public int getLength(){
+        return alternatives.length;
+    }
+
     private String getMatrix() {
         var builder = new StringBuilder(alternatives.length * alternatives[0].length);
         builder.append("[");

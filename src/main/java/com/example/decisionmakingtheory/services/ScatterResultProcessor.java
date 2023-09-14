@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -19,8 +17,7 @@ public class ScatterResultProcessor implements ResultProcessor {
     private final PNGScatterPainter painter;
     private final Config config;
     @Override
-    public void processResult(AlternativeCriteriaTable table, Domination domination, String resultName) {
-        var time = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString().replace(":","_");
+    public void processResult(AlternativeCriteriaTable table, Domination domination, String resultName, String fileName) {
         PlotData build = PlotData.builder()
                 .height(600)
                 .width(600)
@@ -30,7 +27,7 @@ public class ScatterResultProcessor implements ResultProcessor {
                 .series(resultName)
                 .build();
         String path = config.getPathToResultFolder() + File.separator
-                + "scatter_" + resultName + "_" + time + ".png";
+                + fileName;
         File img;
         try {
             img = Files.createFile(Path.of(path)).toFile();
