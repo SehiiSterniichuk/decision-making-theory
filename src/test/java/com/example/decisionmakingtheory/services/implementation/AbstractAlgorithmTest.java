@@ -1,12 +1,12 @@
 package com.example.decisionmakingtheory.services.implementation;
 
-import com.example.decisionmakingtheory.lab1.config.Config;
-import com.example.decisionmakingtheory.lab1.domain.AlternativeCriteriaTable;
-import com.example.decisionmakingtheory.lab1.domain.Domination;
-import com.example.decisionmakingtheory.lab1.services.Algorithm;
-import com.example.decisionmakingtheory.lab1.services.implementation.CSVFileAlternativeFactory;
-import com.example.decisionmakingtheory.lab1.services.implementation.ParetoAlgorithm;
-import com.example.decisionmakingtheory.lab1.services.implementation.SlaterAlgorithm;
+import com.example.decisionmakingtheory.config.Config;
+import com.example.decisionmakingtheory.multiplecriteriadecisionmaking.domain.AlternativeCriteriaTable;
+import com.example.decisionmakingtheory.multiplecriteriadecisionmaking.domain.Domination;
+import com.example.decisionmakingtheory.multiplecriteriadecisionmaking.service.Algorithm;
+import com.example.decisionmakingtheory.multiplecriteriadecisionmaking.service.implementation.CSVFileAlternativeFactory;
+import com.example.decisionmakingtheory.multiplecriteriadecisionmaking.service.implementation.ParetoAlgorithm;
+import com.example.decisionmakingtheory.multiplecriteriadecisionmaking.service.implementation.SlaterAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 

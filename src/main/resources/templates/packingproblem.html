@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab1</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<table >
+    <tr>
+        <th colspan="1">Data</th>
+        <th th:colspan="1">Analytical calculation (number of containers)</th>
+    </tr>
+    <tr th:each="value, iterStat : ${statistics.mathCalculation()}">
+        <th th:text="${iterStat.index + 1} + ' row'"></th>
+        <td th:text="${value} "></td>
+    </tr>
+</table>
+
+
+</body>
+</html>
