@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -13,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class PackingProblemController {
     private final PackingProblemService service;
-    @GetMapping
-    public String getDefaultExploration(Model model){
-        ExplorationStatistics statistics = service.makeDefaultExploration();
+    @GetMapping("/{capacity}")
+    public String getDefaultExploration(Model model, @PathVariable int capacity){
+        ExplorationStatistics statistics = service.makeDefaultExploration(capacity);
         model.addAttribute("statistics", statistics);
         return "packingproblem";
     }

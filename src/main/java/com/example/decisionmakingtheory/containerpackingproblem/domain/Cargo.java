@@ -1,5 +1,6 @@
 package com.example.decisionmakingtheory.containerpackingproblem.domain;
 
+import java.util.Arrays;
 import java.util.List;
 
 public record Cargo(int[] goods) {
@@ -12,5 +13,12 @@ public record Cargo(int[] goods) {
             target += c.goods.length;
         }
         return new Cargo(newArray);
+    }
+
+    @Override
+    public String toString() {
+        return "Cargo{" +
+                "goods=" + Arrays.toString(goods) +
+                '}';
     }
 }

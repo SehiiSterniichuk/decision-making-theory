@@ -16,7 +16,25 @@
         <td th:text="${value} "></td>
     </tr>
 </table>
-
+<table th:each="value : ${statistics.algorithmData()}">
+    <tr>
+        <th colspan="1" rowspan="3">Data</th>
+        <th th:colspan="8" rowspan="1" th:text="${value.tableTitle()}"></th>
+    </tr>
+    <tr>
+        <th colspan="4">Container counter</th>
+        <th th:colspan="4">Complexity</th>
+    </tr>
+    <tr>
+        <th th:each="algo: ${value.algorithmName()}" th:text="${algo}" colspan="1"></th>
+        <th th:each="algo: ${value.algorithmName()}" th:text="${algo}" colspan="1"></th>
+    </tr>
+    <tr th:each="containerCounterRow, row : ${value.containerCounter()}">
+        <th th:text="${row.index + 1} + ' row'"></th>
+        <td th:each="algo, algoIter: ${value.algorithmName()}" th:text="${value.containerCounter()[row.index][algoIter.index]}"></td>
+        <td th:each="algo, algoIter: ${value.algorithmName()}" th:text="${value.complexity()[row.index][algoIter.index]}"></td>
+    </tr>
+</table>
 
 </body>
 </html>

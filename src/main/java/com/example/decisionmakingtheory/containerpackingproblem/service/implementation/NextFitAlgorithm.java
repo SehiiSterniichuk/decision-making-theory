@@ -31,4 +31,9 @@ public class NextFitAlgorithm implements MinimumContainerAmountEstimator {
         }
         return new Result(complexity, containers.size());
     }
+
+    @Override
+    public String getShortName(){
+        return "NFA";
+    }
 }
