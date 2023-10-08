@@ -1,6 +1,16 @@
 # decision-making-theory
 Decision Making Theory at KPI
 
+## Built With
+- Java 20 <img src="https://cdn.jsdelivr.net/npm/programming-languages-logos/src/java/java.png" style="height: 1rem">
+- Spring Boot 🍃
+- Unit testing
+- Thymeleaf
+- Lombok 🏝️
+- JFreeChart 📈
+- HTML 5️⃣
+- CSS 😎
+
 ## Pareto optimal
 
 <body>
