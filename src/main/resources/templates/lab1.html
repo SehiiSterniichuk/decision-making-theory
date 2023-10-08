@@ -10,10 +10,10 @@
         <table >
             <tr>
                 <th colspan="1"></th>
-                <th th:colspan="${res.table().getLength()}">Альтернативи</th>
+                <th th:colspan="${res.table().getLength()}">Alternatives</th>
             </tr>
             <tr >
-                <th>Критерії</th>
+                <th>Criteria</th>
                 <th th:each="tableArray, iterStat : ${res.table().alternatives()}"
                     th:text="'A' + ${iterStat.index + 1}"></th>
             </tr>
