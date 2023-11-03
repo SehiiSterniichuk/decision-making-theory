@@ -12,4 +12,7 @@ import org.springframework.stereotype.Component;
 public class Config {
     private String pathToCSV;
     private String pathToResultFolder;
+    private String pathToClothesAlternatives;
+    private String pathToClothes;
+    private String pathToWeather;
 }

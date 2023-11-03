@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab1</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<table th:each="value : ${table}">
+    <tr>
+        <th colspan="1" rowspan="2">Set</th>
+        <th colspan="1" rowspan="2">Delivery Price</th>
+        <th th:colspan="${table.set()[0].necessaryClothes().size()}"
+            rowspan="1">Must buy</th>
+    </tr>
+    <tr>
+        <th th:each="month: ${table.set()[0].getMonths()}" th:text="${month}">Default Month</th>
+    </tr>
+    <tr th:each="set, row : ${table.set()}">
+        <th th:text="'Set ' + ${row.index + 1}"></th>
+        <td th:text="${set.deliveringPrice()}"></td>
+        <td th:each="clothesList, monthIter: ${set.necessaryClothes()}" th:text="${set.clothesToString(clothesList)}"></td>
+    </tr>
+</table>
+
+</body>
+</html>
