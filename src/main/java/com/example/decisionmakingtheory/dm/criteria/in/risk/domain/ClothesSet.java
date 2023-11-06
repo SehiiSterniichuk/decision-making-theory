@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.time.Month;
 
-public record ClothesSet(float deliveringPrice, List<List<Clothes>> necessaryClothes) {
+public record ClothesSet(float deliveringPrice, List<MonthNewClothes> months) {
 
     public List<String> getMonths() {
-        return IntStream.range(0, necessaryClothes.size())
+        return IntStream.range(0, months.size())
                 .mapToObj(index -> {
                     int monthValue = index % 12;
                     return Month.of(monthValue + 1).toString();

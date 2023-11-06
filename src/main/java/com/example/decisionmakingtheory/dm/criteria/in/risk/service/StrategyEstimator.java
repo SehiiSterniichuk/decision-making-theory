@@ -1,31 +1,24 @@
 package com.example.decisionmakingtheory.dm.criteria.in.risk.service;
 
-import com.example.decisionmakingtheory.dm.criteria.in.risk.domain.Alternative;
-import com.example.decisionmakingtheory.dm.criteria.in.risk.domain.Clothes;
-import com.example.decisionmakingtheory.dm.criteria.in.risk.domain.ClothesSet;
-import com.example.decisionmakingtheory.dm.criteria.in.risk.domain.PriceAlternativeTable;
+import com.example.decisionmakingtheory.dm.criteria.in.risk.domain.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class StrategyEstimator {
-    public PriceAlternativeTable buyNecessaryClothes(List<Clothes> clothes,
+    public PriceAlternativeTable buyNecessaryClothes(Map<String, Clothes> clothesMap,
                                                      List<Alternative> alternatives,
                                                      List<Byte> weather,
                                                      float weightCoeff) {
         var map = new TemperatureAlternatives(alternatives);
         List<ClothesSet> set = new ArrayList<>(alternatives.size());
-        Map<String, Clothes> clothesMap = clothes.stream()
-                .collect(Collectors.toMap(Clothes::name, c -> c));
         for (var alternative : alternatives) {
             List<List<Clothes>> necessaryClothes = new ArrayList<>(weather.size());
             for (var temp : weather) {
                 var properAlternative = map.getAlternativeForTemperature(temp);
-
                 if (properAlternative.equals(alternative)) {
                     necessaryClothes.add(List.of());
                     continue;
@@ -33,9 +26,31 @@ public class StrategyEstimator {
                 List<Clothes> necessary = getNecessaryClothes(alternative, properAlternative, clothesMap);
                 necessaryClothes.add(necessary);
             }
-            set.add(new ClothesSet(alternative.weight() * weightCoeff, necessaryClothes));
+            List<MonthNewClothes> necessary = getMonthNewClothes(necessaryClothes);
+            set.add(new ClothesSet(alternative.weight() * weightCoeff, necessary));
         }
         return new PriceAlternativeTable(set);
+    }
+
+    private static List<MonthNewClothes> getMonthNewClothes(List<List<Clothes>> necessaryClothes) {
+        List<MonthNewClothes> necessary = new ArrayList<>(necessaryClothes.size());
+        for (var list : necessaryClothes) {
+            var formula = new StringBuilder();
+            float total = 0;
+            for (var item : list) {
+                if(item == null){
+                    continue;
+                }
+                float price = item.price();
+                total += price;
+                formula.append(price).append("+");
+            }
+            if(!formula.isEmpty()){
+                formula.deleteCharAt(formula.length() - 1);
+            }
+            necessary.add(new MonthNewClothes(list, formula.toString(), total));
+        }
+        return necessary;
     }
 
     private static List<Clothes> getNecessaryClothes(Alternative alternative, Alternative properAlternative, Map<String, Clothes> clothesMap) {
