@@ -16,10 +16,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class RiskController {
     private final RiskService service;
+
     @GetMapping("/{coeff}")
-    public String getEstimationTable(Model model, @PathVariable float coeff){
+    public String getEstimationTable(Model model, @PathVariable float coeff) {
         PriceAlternativeTable priceAlternativeTable = service.getEstimationTable(coeff);
         model.addAttribute("table", priceAlternativeTable);
         return "estimation-table";
+    }
+
+    @GetMapping("/strategies/{coeff}")
+    public String getStrategies(Model model, @PathVariable float coeff) {
+        var response = service.getResponse(coeff);
+        model.addAttribute("table", response.table());
+        model.addAttribute("strategiesResponse", response.strategyBodies());
+        System.out.println(response.strategyBodies());
+        return "risk_page";
     }
 }

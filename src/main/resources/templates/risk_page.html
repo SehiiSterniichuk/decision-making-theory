@@ -86,14 +86,21 @@
         </td>
     </tr>
 </table>
-<div class="eq-c">
-    <var>E[U(x1)] =</var>
-    <span class="intsuma">
+<div th:each="body : ${strategiesResponse}">
+    <h3 th:text="${body.title()}"></h3>
+    <div class="eq-c" th:each="strategy, row : ${body.strategies()}">
+        <var th:text="'E[U(x'+ ${(row.index + 1)} +')] ='"></var>
+        <span class="intsuma">
     <span class="lim">year</span>
     <span class="sum-frac">&sum;</span>
     <span class="lim"><var>j</var>=j</span>
   </span>
-    <var>u(x1,Oj)P(Oj|x1)=</var>
+        <var th:text="'u(x'+ ${(row.index + 1)} +',Oj)P(Oj|x'+ ${(row.index + 1)} +')='"></var>
+        <var th:text="${strategy.expression()}"></var>
+        <var th:text=" '=' + ${''.format('%.1f', strategy.value())}"></var>
+        <var th:text="${row.index == body.bestIndex()? '- best' : ''}"></var>
+    </div>
 </div>
+
 </body>
 </html>
