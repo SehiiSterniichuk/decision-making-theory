@@ -4,12 +4,15 @@ import com.example.decisionmakingtheory.dm.criteria.in.risk.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.time.YearMonth;
 
 @Service
 @RequiredArgsConstructor
@@ -19,16 +22,10 @@ public class RiskService {
     private final ClothesFactory clothesFactory;
     private final WeatherFactory weatherFactory;
 
-    public PriceAlternativeTable getEstimationTable(float coeff) {
-        List<Alternative> alternatives = alternativeFactory.getAlternatives();
-        List<Clothes> clothes = clothesFactory.getClothes();
-        List<Byte> temperatures = weatherFactory.getTemperatures();
-        Map<String, Clothes> clothesMap = clothes.stream()
-                .collect(Collectors.toMap(Clothes::name, c -> c));
-        return estimator.buyNecessaryClothes(clothesMap, alternatives, temperatures, coeff);
+    record Variant(String title, int[] invertedProbability) {
     }
 
-    record Variant(String title, int[] invertedProbability) {
+    record VariantWithCoeff(String title, int[] invertedProbability, int[] probabilityCoeff) {
     }
 
     private final Variant equalYearProbability = new Variant("Equal probability",
@@ -48,21 +45,67 @@ public class RiskService {
             .map(x -> Set.of(0, 1, 11).contains(x) ? 6 : 18).toArray());
 
     List<Variant> variants = List.of(equalYearProbability, winter, spring, summer, autumn, winter3);
+    Set<Integer> discountClothes = Set.of(1, 3, 8, 14, 15);
 
-    public StrategyResponse getResponse(float coeff) {
+    public StrategyResponse getResponse(float coeff, float priceDivisor) {
         List<Alternative> alternatives = alternativeFactory.getAlternatives();
         List<Clothes> clothes = clothesFactory.getClothes();
         List<Byte> temperatures = weatherFactory.getTemperatures();
         assert temperatures.size() == 12;
-        Map<String, Clothes> clothesMap = clothes.stream()
-                .collect(Collectors.toMap(Clothes::name, c -> c));
+        Map<String, Clothes> clothesMap = clothes.stream().collect(Collectors.toMap(Clothes::name, c -> c));
         var table = estimator.buyNecessaryClothes(clothesMap, alternatives, temperatures, coeff);
-        List<StrategyBody> strategyBodies = new ArrayList<>(variants.size() + 1);
+        List<StrategyBody> strategyBodies = new ArrayList<>(variants.size() + 2);
+        // calculate with defined probabilities
         variants.forEach(x -> strategyBodies.add(findStrategy(table, x.invertedProbability(), x.title())));
-        return new StrategyResponse(strategyBodies, table);
+        // calculate depending on days in a month
+        var daysInMonth = getInvertedProbabilityDependingOnDaysInMonth();
+        strategyBodies.add(findStrategy(table, daysInMonth.invertedProbability(), daysInMonth.probabilityCoeff(), daysInMonth.title()));
+        //calculate with discount
+        clothesMap = getNewClothesMap(priceDivisor, clothes);
+        PriceAlternativeTable discountTable = estimator.buyNecessaryClothes(clothesMap, alternatives, temperatures, coeff);
+        strategyBodies.add(findStrategy(discountTable,
+                equalYearProbability.invertedProbability(), equalYearProbability.title + " with discount"));
+        List<WeatherData> weatherData = getWeatherData(temperatures);
+        return new StrategyResponse(strategyBodies, table,discountTable, weatherData);
+    }
+
+    private Map<String, Clothes> getNewClothesMap(float priceDivisor, List<Clothes> clothes) {
+        List<Clothes> newClothes = IntStream.range(0, clothes.size())
+                .mapToObj(i -> discountClothes.contains(i) ?
+                        clothes.get(i).withNewPrice(p -> p / priceDivisor)
+                        : clothes.get(i)).toList();
+        return newClothes.stream().collect(Collectors.toMap(Clothes::name, c -> c));
+    }
+
+    private static List<WeatherData> getWeatherData(List<Byte> temperatures) {
+        return IntStream.range(1, 13).mapToObj(i -> new WeatherData(getMonth(i), temperatures.get(i - 1))).toList();
+    }
+
+    private static String getMonth(int i) {
+        String upper = Month.of(i).toString();
+        return upper.charAt(0) + upper.toLowerCase().substring(1, upper.length());
+    }
+
+
+    private VariantWithCoeff getInvertedProbabilityDependingOnDaysInMonth() {
+        int currentYear = YearMonth.now().getYear();
+        int[] daysInMonth = new int[12];
+        int lengthOfTheYear = Year.now().length();
+        for (int month = 1; month <= 12; month++) {
+            YearMonth yearMonth = YearMonth.of(currentYear, month);
+            daysInMonth[month - 1] = yearMonth.lengthOfMonth();
+        }
+        return new VariantWithCoeff("Depending on days in a month of " + currentYear,
+                IntStream.range(0, 12).map(x -> lengthOfTheYear).toArray(), daysInMonth);
     }
 
     private StrategyBody findStrategy(PriceAlternativeTable table, int[] invertedProbability,
+                                      String title) {
+        return findStrategy(table, invertedProbability, null, title);
+    }
+
+    private StrategyBody findStrategy(PriceAlternativeTable table, int[] invertedProbability,
+                                      int[] probabilityCoeff,
                                       String title) {
         int setsNumber = table.set().size();
         List<Strategy> strategies = new ArrayList<>(setsNumber);
@@ -77,17 +120,18 @@ public class RiskService {
                 }
                 var necessary = set.months().get(j);
                 float actualValue = delivering + necessary.value();
-                expression
-                        .append('(')
-                        .append(actualValue)
-                        .append('/')
-                        .append(invertedProbability[j])
-                        .append(')')
-                        .append('+');
-                total += actualValue / invertedProbability[j];
+                if (probabilityCoeff != null) {
+                    expression
+                            .append(probabilityCoeff[j])
+                            .append('*');
+                    total += (actualValue / invertedProbability[j]) * probabilityCoeff[j];
+                } else {
+                    total += (actualValue / invertedProbability[j]);
+                }
+                expression.append(' ').append('(').append(actualValue).append('/')
+                        .append(invertedProbability[j]).append(')').append(' ').append('+');
             }
             expression.deleteCharAt(expression.length() - 1);
-            expression.append(')');
             strategies.add(new Strategy(expression.toString(), total));
         }
         int min = findMin(strategies);

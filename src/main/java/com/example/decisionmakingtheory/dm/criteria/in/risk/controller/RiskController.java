@@ -1,6 +1,5 @@
 package com.example.decisionmakingtheory.dm.criteria.in.risk.controller;
 
-import com.example.decisionmakingtheory.dm.criteria.in.risk.domain.PriceAlternativeTable;
 import com.example.decisionmakingtheory.dm.criteria.in.risk.service.RiskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,19 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RiskController {
     private final RiskService service;
 
-    @GetMapping("/{coeff}")
-    public String getEstimationTable(Model model, @PathVariable float coeff) {
-        PriceAlternativeTable priceAlternativeTable = service.getEstimationTable(coeff);
-        model.addAttribute("table", priceAlternativeTable);
-        return "estimation-table";
-    }
-
-    @GetMapping("/strategies/{coeff}")
-    public String getStrategies(Model model, @PathVariable float coeff) {
-        var response = service.getResponse(coeff);
+    @GetMapping("/strategies/{coeff}/{priceDivisor}")
+    public String getStrategies(Model model, @PathVariable float coeff, @PathVariable float priceDivisor) {
+        var response = service.getResponse(coeff, priceDivisor);
         model.addAttribute("table", response.table());
+        model.addAttribute("discountTable", response.discountTable());
+        model.addAttribute("weatherData", response.weatherData());
         model.addAttribute("strategiesResponse", response.strategyBodies());
-        System.out.println(response.strategyBodies());
         return "risk_page";
     }
 }

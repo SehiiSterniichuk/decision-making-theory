@@ -22,15 +22,15 @@ public class AlternativeFactory {
             String line;
             alternatives = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
-                var props = line.replace("-","").split(",");
+                var props = line.split(",");
                 if (props.length != 8) {
                     throw new IllegalArgumentException("Alternative should have 8 parameters");
                 }
                 var temp = getTemperature(props);
                 var alternative = new Alternative(temp.min(), temp.max(),
-                        props[2], props[3],
-                        props[4], props[5],
-                        props[6], Float.parseFloat(props[7]));
+                        props[2].replace("-",""), props[3].replace("-",""),
+                        props[4].replace("-",""), props[5].replace("-",""),
+                        props[6].replace("-",""), Float.parseFloat(props[7]));
                 alternatives.add(alternative);
             }
         } catch (IOException e) {

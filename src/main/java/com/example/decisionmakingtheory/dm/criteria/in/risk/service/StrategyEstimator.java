@@ -43,10 +43,13 @@ public class StrategyEstimator {
                 }
                 float price = item.price();
                 total += price;
-                formula.append(price).append("+");
+                formula.append(' ').append(price).append(' ').append("+");
             }
             if(!formula.isEmpty()){
                 formula.deleteCharAt(formula.length() - 1);
+            }
+            if(!formula.isEmpty()){
+                formula.append('=').append(' ').append(total);
             }
             necessary.add(new MonthNewClothes(list, formula.toString(), total));
         }

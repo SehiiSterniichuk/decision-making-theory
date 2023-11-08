@@ -18,6 +18,6 @@ public record ClothesSet(float deliveringPrice, List<MonthNewClothes> months) {
     }
 
     public static String clothesToString(List<Clothes> clothes) {
-        return clothes.stream().filter(Objects::nonNull).map(Clothes::name).collect(Collectors.joining(","));
+        return clothes.stream().filter(Objects::nonNull).map(Clothes::name).collect(Collectors.joining(", "));
     }
 }

@@ -61,6 +61,19 @@
     <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
 </head>
 <body>
+<table>
+    <tr>
+        <th colspan="13" rowspan="1">Weather data</th>
+    </tr>
+    <tr>
+        <th>Month</th>
+        <th th:each="data : ${weatherData}" th:text="${data.monthName()}">Default Month</th>
+    </tr>
+    <tr>
+        <th>t</th>
+        <th th:each="data : ${weatherData}" th:text="${(data.temperature() > 0 ? '+' : '') + data.temperature()}">Default temp</th>
+    </tr>
+</table>
 <table th:each="value : ${table}">
     <tr>
         <th colspan="1" rowspan="2">Set</th>
@@ -80,8 +93,6 @@
             <p th:text="${set.clothesToString(clothesList.clothes())}"></p>
             <div class="row">
                 <p th:text="${clothesList.formula()}"></p>
-                <p th:text="${!clothesList.formula().isBlank()? '=' : ''}">=</p>
-                <p th:text="${!clothesList.formula().isBlank()? clothesList.value() : ''}"></p>
             </div>
         </td>
     </tr>
@@ -91,16 +102,39 @@
     <div class="eq-c" th:each="strategy, row : ${body.strategies()}">
         <var th:text="'E[U(x'+ ${(row.index + 1)} +')] ='"></var>
         <span class="intsuma">
-    <span class="lim">year</span>
+<!--    <span class="lim">year</span>-->
     <span class="sum-frac">&sum;</span>
-    <span class="lim"><var>j</var>=j</span>
+<!--    <span class="lim"><var>j</var>=1</span>-->
   </span>
-        <var th:text="'u(x'+ ${(row.index + 1)} +',Oj)P(Oj|x'+ ${(row.index + 1)} +')='"></var>
+        <var th:text="'u(x'+ ${(row.index + 1)} +',Oj)P(Oj|x'+ ${(row.index + 1)} +') = '"></var>
         <var th:text="${strategy.expression()}"></var>
-        <var th:text=" '=' + ${''.format('%.1f', strategy.value())}"></var>
+        <var th:text=" ' = ' + ${''.format('%.1f', strategy.value())}"></var>
         <var th:text="${row.index == body.bestIndex()? '- best' : ''}"></var>
     </div>
 </div>
-
+<h2>Discount Table</h2>
+<table>
+    <tr>
+        <th colspan="1" rowspan="2">Set</th>
+        <th colspan="1" rowspan="2">Delivery Price</th>
+        <th th:colspan="${discountTable.set()[0].months().size()}"
+            rowspan="1">Must buy
+        </th>
+    </tr>
+    <tr>
+        <th th:each="month: ${discountTable.set()[0].getMonths()}" th:text="${month}">Default Month</th>
+    </tr>
+    <tr th:each="set, row : ${discountTable.set()}">
+        <th th:text="'Set ' + ${row.index + 1}"></th>
+        <td th:text="${set.deliveringPrice()}"></td>
+        <td th:each="clothesList, monthIter: ${set.months()}"
+        >
+            <p th:text="${set.clothesToString(clothesList.clothes())}"></p>
+            <div class="row">
+                <p th:text="${clothesList.formula()}"></p>
+            </div>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
