@@ -30,11 +30,13 @@ import java.util.*;
 public class JFreeChartPNGScatterPainter implements PNGScatterPainter {
 
     record Point(int x, int y) {
+
         public double distanceTo(Point other) {
             int deltaX = this.x() - other.x();
             int deltaY = this.y() - other.y();
             return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         }
+
         public static List<Point> sortNearestNeighbor(List<Point> points) {
             int n = points.size();
             if (n <= 1) {
@@ -70,8 +72,10 @@ public class JFreeChartPNGScatterPainter implements PNGScatterPainter {
     public JFreeChart createScatter(int[][] alternatives, int[] domination, PlotData data) {
         NumberAxis domain = new NumberAxis("Q1");
         NumberAxis range = new NumberAxis("Q2");
-        domain.setRange(-2, 12);
-        range.setRange(-2, 12);
+        int max = Arrays.stream(alternatives).flatMapToInt(Arrays::stream).max().orElse(12);
+        int min = Arrays.stream(alternatives).flatMapToInt(Arrays::stream).min().orElse(-2);
+        domain.setRange(min - 2, max + 2);
+        range.setRange(min - 2, max + 2);
         XYDotRenderer renderer = new XYDotRenderer();
         renderer.setDotHeight(7);
         renderer.setDotWidth(7);
