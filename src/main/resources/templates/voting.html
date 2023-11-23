@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab1</title>
+    <style>
+        .intsuma {
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .intsuma > span {
+            display: block;
+            font-size: 70%;
+        }
+
+        .intsuma .lim-up {
+            margin-bottom: -1ex;
+        }
+
+        .intsuma .lim {
+            margin-top: -0.5ex;
+        }
+
+        .intsuma .sum {
+            font-size: 1.5em;
+            font-weight: lighter;
+        }
+
+        .intsuma .sum-frac {
+            font-size: 1.5em;
+            font-weight: 100;
+        }
+
+        .fraction {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 0.2em 0.4ex;
+            text-align: center;
+        }
+
+        .fraction > span {
+            display: block;
+            padding-top: 0.15em;
+        }
+
+        .fraction span.fdn {
+            border-top: thin solid black;
+        }
+
+        .fraction span.bar {
+            display: none;
+        }
+
+        .row {
+            display: flex;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+
+</body>
+</html>

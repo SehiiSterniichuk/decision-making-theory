@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "my.io")
 public class Config {
     private String pathToCSV;
+    private String pathToInputFolder;
     private String pathToResultFolder;
     private String pathToClothesAlternatives;
     private String pathToClothes;
