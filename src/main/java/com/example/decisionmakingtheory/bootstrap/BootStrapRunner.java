@@ -15,6 +15,7 @@ public class BootStrapRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
         fileService.deleteOldOutput();
-        service.defaultScenario("election.csv");
+        var results = service.defaultScenario("election.csv");
+        System.out.println(results);
     }
 }
