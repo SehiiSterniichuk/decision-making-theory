@@ -61,6 +61,30 @@
     <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
 </head>
 <body>
-
+<table>
+    <tr>
+        <th th:colspan="${data.votes().length + 1}" th:text="${source}" rowspan="1">Input data</th>
+    </tr>
+    <tr>
+        <th>Votes</th>
+        <th th:each="vote : ${data.votes()}" th:text="${vote}">Vote value</th>
+    </tr>
+    <tr>
+        <th th:rowspan="${data.rating().length + 1}">Rating</th>
+    </tr>
+    <tr th:each="row : ${data.rating()}">
+        <th th:each="candidate : ${row}" th:text="${(candidate)}">a</th>
+    </tr>
+</table>
+<table>
+    <tr>
+        <th>Method</th>
+        <th th:colspan="${results.size()}" rowspan="1">Winner</th>
+    </tr>
+    <tr th:each="res : ${results}">
+        <th th:text="${res.methodName()}">Title</th>
+        <th th:text="${res.winner()}">Winner char</th>
+    </tr>
+</table>
 </body>
 </html>
