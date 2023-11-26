@@ -37,23 +37,24 @@ public class VotingService {
                     .max(Comparator.comparingInt(Map.Entry::getValue))//обираємо того в кого більше балів, того й записуємо у змінну winner
                     .map(Map.Entry::getKey).orElse('0');
         }
-        return new VotingResult("Sequential Elimination", winner, null);
+        return new VotingResult("Sequential Elimination", winner);
     }
 
     private VotingResult absoluteMajority(ElectionData data) {//метод абсолютної більшості у два тури
         Map<Character, Integer> counter = countScore(data);
-        if (counter.size() < 3) {//якщо лічильник має лише два кандидати, отже ми можемо оголосити переможця
-            Set<Map.Entry<Character, Integer>> entries = counter.entrySet();
-            return entries.stream()
-                    .max(Comparator.comparingInt(Map.Entry::getValue))
-                    .map(winner -> new VotingResult("Absolute majority", winner.getKey(), null))
-                    .orElse(null);
+        float half = Arrays.stream(data.votes()).sum() / 2f;
+        Set<Map.Entry<Character, Integer>> entries = counter.entrySet();
+        var firstTourWinner = entries.stream()
+                .filter(e -> e.getValue() * 1.0 > half).findAny();//шукаємо кандидата який переміг у першому турі
+        if(firstTourWinner.isPresent()) {//якщо такий є, то оголошуємо його переможцем
+            return new VotingResult("Absolute majority", firstTourWinner.get().getKey());
         }
-        Set<Character> nextTour = counter.entrySet().stream()
+        //якщо жоден кандидат не набрав більш ніж половини голосів, то відбираємо 2 найсильніших у наступний тур
+        Set<Character> nextTour = entries.stream()
                 .sorted((x, y) -> y.getValue() - x.getValue())
                 .limit(2).map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
-        //інакше ми рекурсивно передаємо у наступний тур двох найсильніших кандидатів
+        //тоді рекурсивно передаємо у наступний тур двох найсильніших кандидатів
         return absoluteMajority(reduceData(data, nextTour));
     }
 
@@ -106,7 +107,7 @@ public class VotingService {
                 winner = s;
             }
         }
-        return new VotingResult("Simpson", winner.c(), null);
+        return new VotingResult("Simpson", winner.c());
     }
 
     private static char[] getCandidates(ElectionData data) {
@@ -136,7 +137,7 @@ public class VotingService {
             }
         }
         var simpsons = counter.entrySet().stream()
-                .map(e-> new Simpson(e.getKey(), e.getValue())).toList();
+                .map(e -> new Simpson(e.getKey(), e.getValue())).toList();
         return new SimpsonData(candidate, simpsons);
     }
 }
