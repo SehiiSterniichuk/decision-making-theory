@@ -23,25 +23,26 @@ public class VotingService {
         VotingResult simpson = simpson(data);
         VotingResult majority = absoluteMajority(data);
         VotingResult sequential = sequentialElimination(data);
-        return new Response(fileName, data, List.of(simpson, majority, sequential));
+        return new Response(fileName, data, List.of(majority, simpson, sequential));
     }
 
     private VotingResult sequentialElimination(ElectionData data) {
-        char[] candidates = getCandidates(data);
+        char[] candidates = getCandidates(data);//відсортовані кандидати за алфавітом кодування ASCII
         char winner = candidates[0];
-        for (var x : candidates) {
+        for (var x : candidates) {// послідовно порівнюємо кандидатів з теперішнім переможцем
             if (winner == x) continue;
-            var compareData = reduceData(data, Set.of(winner, x));
-            winner = countScore(compareData).entrySet().stream()
-                    .max(Comparator.comparingInt(Map.Entry::getValue))
+            var compareData = reduceData(data, Set.of(winner, x));//створюємо матрицю з двома кандидатами winner та x
+            var counter = countScore(compareData);//обчислюємо хто набрав скільки балів
+            winner = counter.entrySet().stream()
+                    .max(Comparator.comparingInt(Map.Entry::getValue))//обираємо того в кого більше балів, того й записуємо у змінну winner
                     .map(Map.Entry::getKey).orElse('0');
         }
         return new VotingResult("Sequential Elimination", winner, null);
     }
 
-    private VotingResult absoluteMajority(ElectionData data) {
+    private VotingResult absoluteMajority(ElectionData data) {//метод абсолютної більшості у два тури
         Map<Character, Integer> counter = countScore(data);
-        if (counter.size() < 3) {
+        if (counter.size() < 3) {//якщо лічильник має лише два кандидати, отже ми можемо оголосити переможця
             Set<Map.Entry<Character, Integer>> entries = counter.entrySet();
             return entries.stream()
                     .max(Comparator.comparingInt(Map.Entry::getValue))
@@ -52,25 +53,30 @@ public class VotingService {
                 .sorted((x, y) -> y.getValue() - x.getValue())
                 .limit(2).map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
+        //інакше ми рекурсивно передаємо у наступний тур двох найсильніших кандидатів
         return absoluteMajority(reduceData(data, nextTour));
     }
 
     private static Map<Character, Integer> countScore(ElectionData data) {
+        //рахуємо скільки очок набрав кожен кандидат
         Map<Character, Integer> counter = new HashMap<>(data.votes().length);
         for (int i = 0; i < data.rating()[0].length; i++) {
             counter.merge(data.rating()[0][i], data.votes()[i], Integer::sum);
+            //мердж в мапі створює нові дані за ключем, або модифікує значення що вже існує
+            //у цьому випадку ми передаємо Integer::sum - ф-цію суми як модифікатор
         }
         return counter;
     }
 
-    private ElectionData reduceData(ElectionData data, Set<Character> characters) {
-        char[][] rating = new char[characters.size()][data.rating()[0].length];
+    //ф-ція що залишає в матриці кандидатів наявних у переданій множині Set
+    private ElectionData reduceData(ElectionData data, Set<Character> candidates) {
+        char[][] rating = new char[candidates.size()][data.rating()[0].length];
         for (int vote = 0; vote < data.votes().length; vote++) {
             int index = 0;
             for (int j = 0; j < data.rating().length; j++) {
-                if (index == characters.size()) break;
+                if (index == candidates.size()) break;
                 char c = data.rating()[j][vote];
-                if (characters.contains(c)) {
+                if (candidates.contains(c)) {
                     rating[index++][vote] = c;
                 }
             }
@@ -86,16 +92,16 @@ public class VotingService {
     }
 
     private VotingResult simpson(ElectionData data) {
-        char[] candidates = getCandidates(data);
-        List<SimpsonData> simpsons = new ArrayList<>(candidates.length);
+        char[] candidates = getCandidates(data);//Отримання всіх кандидатів у відсортованому вигляді
+        List<SimpsonData> simpsons = new ArrayList<>(candidates.length);//список який зберігає всі S(a,x)
         for (var candidate : candidates) {
             simpsons.add(calculateSimpson(candidate, candidates, data));
         }
         var winner = simpsons.get(0);
         int maxScore = Integer.MIN_VALUE;
         for (var s : simpsons) {
-            var score = s.data().stream().mapToInt(Simpson::points).min().orElse(-1);
-            if (score > maxScore) {
+            var score = s.data().stream().mapToInt(Simpson::points).min().orElse(-1);//обраховуємо S(a) = min(S(a,x))
+            if (score > maxScore) {//зберігаємо кандидата з максимальними балами
                 maxScore = score;
                 winner = s;
             }
@@ -110,23 +116,27 @@ public class VotingService {
         return candidates;
     }
 
+    //метод обраховує S(a,x), де а - 'candidate' параметр
     private SimpsonData calculateSimpson(char candidate, char[] candidates, ElectionData data) {
-        ArrayList<Simpson> simpsons = new ArrayList<>(candidates.length - 1);
-        for (char x : candidates) {
+        Map<Character, Integer> counter = new HashMap<>(candidates.length - 1);
+        //counter - лічильник де ключ кандидат "x", значення - скільки голосів candidate був кращим за x
+        for (char x : candidates) {//обраховуємо число виборців для яких 'candidate' краще за 'x'
             if (x == candidate) continue;
-            for (int i = 0; i < data.votes().length; i++) {
-                int sum = 0;
-                for (var x1 : data.rating()[i]) {
-                    if (x1 == x) {
+            for (int vote = 0; vote < data.votes().length; vote++) {
+                for (int j = 0; j < data.rating().length; j++) {
+                    char x1 = data.rating()[j][vote];
+                    if (x1 == x) {//якщо ми зустріли x раніше за candidate - не зараховуємо нічого в суму
                         break;
                     } else if (x1 == candidate) {
-                        sum += data.votes()[i];
+                        //якщо ми зустріли candidate раніше за x - додаємо голоси в лічильник голоси
+                        counter.merge(x, data.votes()[vote], Integer::sum);
                         break;
                     }
                 }
-                simpsons.add(new Simpson(x, sum));
             }
         }
+        var simpsons = counter.entrySet().stream()
+                .map(e-> new Simpson(e.getKey(), e.getValue())).toList();
         return new SimpsonData(candidate, simpsons);
     }
 }
